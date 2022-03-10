@@ -1,35 +1,22 @@
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Command {
-    String name;
-    long commandId= System.currentTimeMillis();
+public class UserCommandCache {
 
-    public void setName(String name) {
-        this.name = name;
+    private Map<Long,UserRole> comandsUsers = new HashMap<>();
+
+    public void inputUser(long userId, UserRole userRole) {
+        comandsUsers.put(userId, userRole);
     }
 
-    public void setIdSlaveList(ArrayList<Integer> idSlaveList) {
-        this.idSlaveList = idSlaveList;
-    }
 
-    public ArrayList<Integer> getIdSlaveList() {
-        return idSlaveList;
-    }
+    public UserRole getUserRole(long userId) {
+        UserRole userRole = comandsUsers.get(userId);
+        /*if (userRole == null) { //?
+            userRole = BotState.ON_MAIN_MENU;
+        }*/
 
-    public String getName() {
-        return name;
-    }
 
-    ArrayList<Integer> idSlaveList = new ArrayList<Integer>();
-    public Command() {
-    }
-
-    public Command(String name) {
-        this.name = name;
-    }
-
-    public Command(String name,ArrayList<Integer> idSlaveList) {
-        this.name = name;
-        this.idSlaveList = idSlaveList;
+        return userRole;
     }
 }
