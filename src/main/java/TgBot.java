@@ -94,10 +94,10 @@ public class TgBot extends TelegramLongPollingBot {
             break;
 
             case CHOOSE_GROUP_ON_UPDATE:
-                //получения списка команд, где пользователь является админом
-                //проверка на правильность ввода команды
+
+                //проверка на правильность ввода id
                 //Если правильно, то
-                groupIdContainer =0;// ввести какое то значение из бд
+                groupIdContainer =Integer.parseInt(update.getMessage().getText());// ввести какое то значение из бд
 
                 sendMessage(chatId,"Что вы хотите обновить в команде?");
                 sendMessage(chatId,"Напишите /inputuser для добавления людей в группу");
@@ -105,9 +105,12 @@ public class TgBot extends TelegramLongPollingBot {
                 sendMessage(chatId,"Напишите /choiceuserrole для выбора роли пользователя");
                 sendMessage(chatId,"Напишите /changegroupcolor для изменения цвета группы");
                 sendMessage(chatId,"Напишите /creategroup для создания группы в команде");
+                sendMessage(chatId,"Напишите /updategroupcolor");
 
                 break;
-
+            case UPDATE_COLOR:
+                //метод для для обновления цвета с параметром (groupIdContainer, update.getMessage().getText())
+                break;
             case INPUT_GROUP_USERS:
                 //проверка наличия юзера с таким id в команде
                 int someId = 0; // сюда данные из бд
@@ -213,7 +216,18 @@ public class TgBot extends TelegramLongPollingBot {
                 Command command = commands.get(commandIdContainer);//заглушка, убрать потом
                 sendMessage(chatId,"Состав комманды "+ command);
                 break;
+            case("/updategroup"):
+                //вывод групп, где пользователь является админом
+                sendMessage(chatId,"Напишите id группы, которую хотите изменить");
 
+                botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.CHOOSE_GROUP_ON_UPDATE);
+                break;
+            case("/updategroupcolor"):
+                //вывод групп, где пользователь является админом
+                sendMessage(chatId,"Напишите новый цвет для группы");
+
+                botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.UPDATE_COLOR);
+                break;
             case("токен"):
                 sendMessage(chatId,String.valueOf(botStateCache.getUsersCurrentBotState(getUSER_ID())));
 
