@@ -59,19 +59,9 @@ public class TgBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
-        //положение автомата бота
-        // We check if the update has a message and the message has text
         if (update.hasMessage() && update.getMessage().hasText()) {
-            // Set variables
             setUSER_ID(update.getMessage().getFrom().getId());
-
-            //botStateCache.getUsersCurrentBotState();
-            String message_text = update.getMessage().getText();
-            //message_text = update.getMessage().getForwardFrom().getId();
             long chat_id = update.getMessage().getChatId();
-            //stateAnalyzer(botStateCache.getUsersCurrentBotState(getUSER_ID()));
-            //sendMessage(chat_id,"asdasd");
-           //sendMessage(chat_id, String.valueOf(update.getMessage().getForwardFrom().getId()));
              commandMessage(chat_id,update);
 
         }
@@ -106,6 +96,8 @@ public class TgBot extends TelegramLongPollingBot {
                 sendMessage(chatId,"Напишите /changegroupcolor для изменения цвета группы");
                 sendMessage(chatId,"Напишите /creategroup для создания группы в команде");
                 sendMessage(chatId,"Напишите /updategroupcolor");
+                sendMessage(chatId,"Напишите /deletegroup для создания группы в команде");
+               // sendMessage(chatId,"Напишите /adduser");
 
                 break;
             case UPDATE_COLOR:
@@ -227,6 +219,12 @@ public class TgBot extends TelegramLongPollingBot {
                 sendMessage(chatId,"Напишите новый цвет для группы");
 
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.UPDATE_COLOR);
+                break;
+            case("/trackingon"):
+                //???
+                sendMessage(chatId,"Вы затрекались");
+                //trackingOn(getUSER_ID());
+                botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.ON_MAIN_MENU);
                 break;
             case("токен"):
                 sendMessage(chatId,String.valueOf(botStateCache.getUsersCurrentBotState(getUSER_ID())));
