@@ -87,7 +87,7 @@ public class TgBot extends TelegramLongPollingBot {
 
                 //проверка на правильность ввода id
                 //Если правильно, то
-                groupIdContainer =Integer.parseInt(update.getMessage().getText());// ввести какое то значение из бд
+                groupIdContainer =Integer.parseInt(update.getMessage().getText());
 
                 sendMessage(chatId,"Что вы хотите обновить в команде?");
                 sendMessage(chatId,"Напишите /inputuser для добавления людей в группу");
@@ -95,8 +95,8 @@ public class TgBot extends TelegramLongPollingBot {
                 sendMessage(chatId,"Напишите /choiceuserrole для выбора роли пользователя");
                 sendMessage(chatId,"Напишите /changegroupcolor для изменения цвета группы");
                 sendMessage(chatId,"Напишите /creategroup для создания группы в команде");
-                sendMessage(chatId,"Напишите /updategroupcolor");
-                sendMessage(chatId,"Напишите /deletegroup для создания группы в команде");
+                sendMessage(chatId,"Напишите /updategroupcolor для обновления группы");
+                sendMessage(chatId,"Напишите /deletegroup для удаления группы");
                // sendMessage(chatId,"Напишите /adduser");
 
                 break;
@@ -104,27 +104,25 @@ public class TgBot extends TelegramLongPollingBot {
                 //метод для для обновления цвета с параметром (groupIdContainer, update.getMessage().getText())
                 break;
             case INPUT_GROUP_USERS:
-                //проверка наличия юзера с таким id в команде
-                int someId = 0; // сюда данные из бд
+                int someId = Integer.parseInt(update.getMessage().getText());
                 //addUserToGroup(groupIdContainer, someId,UserRole.SLAVE)
-                sendMessage(chatId,"Пользователь - "+ someId+" добавлен в команду - ");
+                sendMessage(chatId,"Пользователь - "+ someId+" добавлен в команду - " + "getGroupById(groupIdContainer)"); //убрать кавычки у метода
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.ON_MAIN_MENU);
                 break;
             case ON_CHOICE_USER_ROLE:
 
                 otherId = Integer.parseInt(update.getMessage().getText());
-
                 sendMessage(chatId,"Введите 0 чтобы установить пользователю роль студента, либо 1, чтобы установить роль тимлида ");
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.CHOICE_USER_ROLE);
 
                 break;
             case CHOICE_USER_ROLE:
                 if(update.getMessage().getText().equals("1")){
-                    //choiceRoleUserToGroup(someId,UserRole.ADMIN)
+                    //choiceRoleUserInGroup(groupIdContainer,someId,"не знаю какая роль прописана в бд для админа, вставьте сюда значение")
                     sendMessage(chatId,"Для пользователя с if "+ otherId +" установлена роль"+ UserRole.ADMIN);
                 }
                 else{
-                    //choiceRoleUserToGroup(someId,UserRole.SLAVE)
+                    //choiceRoleUserInGroup(groupIdContainer,someId,"не знаю какая роль прописана в бд для студента, вставьте сюда значение")
                     sendMessage(chatId,"Для пользователя с if "+ otherId +" установлена роль"+ UserRole.SLAVE);
                 }
 
@@ -148,8 +146,7 @@ public class TgBot extends TelegramLongPollingBot {
 
             case DELETE_USER_FROM_GROUP:
                 otherId = Integer.parseInt(update.getMessage().getText());
-                //проверка id пользователя на наличие в группе
-                //removeUserFromGroup(otherId) -- полный шлак
+                //removeUserFromGroup(otherId)
                 sendMessage(chatId,"Пользователь с id  - "+Integer.parseInt(update.getMessage().getText())+" удален");
 
 
@@ -187,29 +184,31 @@ public class TgBot extends TelegramLongPollingBot {
             case("/inputuser"):
 
                 sendMessage(chatId,"Напишите id пользователя котороого хотите добавить в команду");
-                //вывод пользователей команды
+                //List<UserEntity> list=getAllUsersInGroup(groupIdContainer);
+                //sendMessage(list); - тоит использовать стрим и вывести все это нормально, но пока пусть будет так
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.INPUT_GROUP_USERS);
                 break;
             case("/choiceuserrole"):
 
                 sendMessage(chatId,"Напишите id пользователя которому хотите поменять роль");
-                //вывод людей и их ролей
+                //List<UserEntity> list=getAllUsersInGroup(groupIdContainer); надеюсь, что в этом ентити есть роль
+                //sendMessage(list);
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.ON_CHOICE_USER_ROLE);
                 break;
             case("/deleteuserfromgroup"):
                 sendMessage(chatId,"Напишите id пользователя которому хотите удалить из группы");
-                //вывод людей и их ролей
+                //List<UserEntity> list=getAllUsersInGroup(groupIdContainer);
+                //sendMessage(list);
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.DELETE_USER_FROM_GROUP);
                 break;
             case("/showcommand"): case("Показать команду"):
-                //запрос команды из бд
+                //запрос команды из бд -- отсутствует
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.SHOW_COMMAND);
-                //setBotState(BotState.INPUT_COMMAND_NAME);
                 Command command = commands.get(commandIdContainer);//заглушка, убрать потом
                 sendMessage(chatId,"Состав комманды "+ command);
                 break;
             case("/updategroup"):
-                //вывод групп, где пользователь является админом
+                //вывод групп, где пользователь является админом (пока этого медота нет)
                 sendMessage(chatId,"Напишите id группы, которую хотите изменить");
 
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.CHOOSE_GROUP_ON_UPDATE);
@@ -221,7 +220,6 @@ public class TgBot extends TelegramLongPollingBot {
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.UPDATE_COLOR);
                 break;
             case("/trackingon"):
-                //???
                 sendMessage(chatId,"Вы затрекались");
                 //trackingOn(getUSER_ID());
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.ON_MAIN_MENU);
