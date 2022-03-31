@@ -138,6 +138,7 @@ public class TgBot extends TelegramLongPollingBot {
                 break;
 
             case DELETE_GROUP:
+
                 otherId = Integer.parseInt(update.getMessage().getText());
                 //deleteGroup( id);
                 sendMessage(chatId,"группа с id "+update.getMessage().getText() +" удалена");
@@ -177,8 +178,9 @@ public class TgBot extends TelegramLongPollingBot {
 
                 break;
             case("/deletegroup"):
-                sendMessage(chatId,"Введите название(цвет) группы ");
-                //вывод групп, где пользователь является лектором --отсуствует
+                sendMessage(chatId,"Введите id группы ");
+                //List<GroupEntity> groupEntity= getGroupsByLector(getUSER_ID());
+                //sendMessage(chatId,groupEntity);
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.DELETE_GROUP);
 
                 break;
@@ -209,13 +211,15 @@ public class TgBot extends TelegramLongPollingBot {
 
                 break;
             case("/updategroup"):
-                //вывод групп, где пользователь является админом (пока этого медота нет)
+                //List<GroupEntity> groupEntity= getGroupsByLector(getUSER_ID());
+                //sendMessage(chatId,groupEntity);
                 sendMessage(chatId,"Напишите id группы, которую хотите изменить");
 
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.CHOOSE_GROUP_ON_UPDATE);
                 break;
             case("/updategroupcolor"):
-                //вывод групп, где пользователь является админом
+                //List<GroupEntity> groupEntity= getGroupsByLector(getUSER_ID());
+                //sendMessage(chatId,groupEntity);
                 sendMessage(chatId,"Напишите новый цвет для группы");
 
                 botStateCache.setUsersCurrentBotState(getUSER_ID(),BotState.UPDATE_COLOR);
